@@ -28,11 +28,11 @@ public class PlayerAttack : MonoBehaviour
             return;
         }
 
-        if (PlayerControls.Instance.Controls["LightAtk"].WasPressedThisFrame())
+        if (Controls.Instance.Crtls["LightAtk"].WasPressedThisFrame())
         {
             LightAttack();
         }
-        else if (PlayerControls.Instance.Controls["StrongAtk"].WasPressedThisFrame())
+        else if (Controls.Instance.Crtls["StrongAtk"].WasPressedThisFrame())
         {
             StrongAttack();
         }

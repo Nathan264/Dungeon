@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerControls : MonoBehaviour
+public class Controls : MonoBehaviour
 {
-    public static PlayerControls Instance;
+    public static Controls Instance;
 
     [SerializeField] private InputActionMap playerControls;
     
-    public InputActionMap Controls
+    public InputActionMap Crtls
     {
         get { return playerControls; }
         set { playerControls = value; }

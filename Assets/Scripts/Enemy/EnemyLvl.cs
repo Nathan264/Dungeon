@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyLvl : MonoBehaviour
 {
     [SerializeField] private EnemyObject eObj;
-    [SerializeField] private EnemyStats eStats;
+    [SerializeField] private Enemy enemy;
 
     private int multiplier;
 
@@ -17,32 +17,32 @@ public class EnemyLvl : MonoBehaviour
 
     private void SetEnemyInfo()
     {
-        eStats.EnemyName = eObj.enemyName;
+        enemy.EnemyName = eObj.enemyName;
 
-        SetlvlStats();
+        Setlvlnemy();
     }
 
-    private void SetlvlStats()
+    private void Setlvlnemy()
     {
-        if (eStats.Lvl < 20)
+        if (enemy.Lvl < 20)
         {
             multiplier = 10;
         }
-        else if (eStats.Lvl >= 20 && eStats.Lvl <= 60)
+        else if (enemy.Lvl >= 20 && enemy.Lvl <= 60)
         {
             multiplier = 5;
         }
-        else if (eStats.Lvl > 60)
+        else if (enemy.Lvl > 60)
         {
             multiplier = 3;
         }
 
-        for (int i = 0; i < eStats.Lvl; i++)
+        for (int i = 0; i < enemy.Lvl; i++)
         {
-            eStats.Hp = IncreaseStats(eStats.Hp);          
-            eStats.Atk = IncreaseStats(eStats.Atk);         
-            eStats.Def = IncreaseStats(eStats.Def);         
-            eStats.Spd = IncreaseStats(eStats.Spd);         
+            enemy.Hp = IncreaseStats(enemy.Hp);          
+            enemy.Atk = IncreaseStats(enemy.Atk);         
+            enemy.Def = IncreaseStats(enemy.Def);         
+            enemy.Spd = IncreaseStats(enemy.Spd);         
         }
     }
 

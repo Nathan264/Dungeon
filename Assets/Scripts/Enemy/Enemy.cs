@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStats : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
+    private Rigidbody rig;
+    private Animator anim;
+
     [SerializeField] private int lvl;
     [SerializeField] private float hp;
     [SerializeField] private float atk;
@@ -11,6 +14,18 @@ public class EnemyStats : MonoBehaviour
     [SerializeField] private float spd;
     [SerializeField] private string enemyName;
     
+
+    public Rigidbody Rig
+    {
+        get { return rig; }
+        set { rig = value; }
+    }
+
+    public Animator Anim
+    {
+        get { return anim; }
+        set { anim = value; }
+    }
 
     public int Lvl 
     {
@@ -46,5 +61,11 @@ public class EnemyStats : MonoBehaviour
     {
         get { return enemyName; }
         set { enemyName = value; }
+    }
+
+    private void Awake()
+    {
+        rig = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
     }
 }

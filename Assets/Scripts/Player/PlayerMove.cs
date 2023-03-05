@@ -22,9 +22,9 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        input = PlayerControls.Instance.Controls["Move"].ReadValue<Vector2>();
+        input = Controls.Instance.Crtls["Move"].ReadValue<Vector2>();
 
-        if (PlayerControls.Instance.Controls["Run"].IsPressed())
+        if (Controls.Instance.Crtls["Run"].IsPressed())
         {
             running = true;
         }
@@ -59,7 +59,4 @@ public class PlayerMove : MonoBehaviour
 
         player.Rig.velocity = new Vector3(input.x, 0f, input.y) * moveSpeed * runSpeed;
     }
-
-    
-
 }
