@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerLook : MonoBehaviour
 {
     [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private GameObject targetMark; 
     private Collider[] enemies;
     private Vector2 moveInput;
 
@@ -17,9 +18,9 @@ public class PlayerLook : MonoBehaviour
     
     private void Update()
     {
-        moveInput = PlayerControls.Instance.Controls["Move"].ReadValue<Vector2>();
+        moveInput = Controls.Instance.Crtls["Move"].ReadValue<Vector2>();
 
-        if (PlayerControls.Instance.Controls["ChangeTarget"].WasPressedThisFrame() && enemies.Length > 1)
+        if (Controls.Instance.Crtls["ChangeTarget"].WasPressedThisFrame() && enemies.Length > 1)
         {
             ChangeTarget();
         }
@@ -41,16 +42,18 @@ public class PlayerLook : MonoBehaviour
         if (enemies.Length > 0)
         {
             enemyDetected = true;
+            targetMark.SetActive(true);
         }
         else
         {
             enemyDetected = false;
+            targetMark.SetActive(false);
         }
     }
 
     private void ChangeTarget()
     {
-        targetInput = PlayerControls.Instance.Controls["ChangeTarget"].ReadValue<float>();
+        targetInput = Controls.Instance.Crtls["ChangeTarget"].ReadValue<float>();
 
         int temp = actualTarget + (int)targetInput;
 
@@ -74,6 +77,9 @@ public class PlayerLook : MonoBehaviour
         lookDir.z = 0;
         lookDir.x = 0;
         transform.rotation = lookDir;
+
+        targetMark.transform.SetParent(enemies[actualTarget].transform);
+        targetMark.transform.localPosition = new Vector3(0f, 1.5f, 0f);
     }
 
     private void Look()
