@@ -6,7 +6,10 @@ public class PlayerLvl : MonoBehaviour
 {
     [SerializeField] private PlayerStats pStats;
     
-    private int multiplier = 10;
+    [SerializeField] private float growFactor;
+    [SerializeField] private float hpGrowCurv;
+    [SerializeField] private float spGrowCurv;
+    [SerializeField] private float[] statsGrowCurvInterval;
 
     public void GainExp(int gainedExp)
     {
@@ -28,38 +31,19 @@ public class PlayerLvl : MonoBehaviour
 
     private void LvlUp()
     {
-        StatusCalc(ref pStats.hp);        
-        StatusCalc(ref pStats.atk);        
-        StatusCalc(ref pStats.spd);        
-        StatusCalc(ref pStats.def);        
-        StatusCalcSp();  
-
-
-        if (pStats.lvl < 20)
-        {
-            multiplier = 10;
-        }
-        else if (pStats.lvl >= 20 && pStats.lvl <= 60)
-        {
-            multiplier = 5;
-        }
-        else if (pStats.lvl > 60)
-        {
-            multiplier = 3;
-        } 
+        StatusCalc(ref pStats.hp, hpGrowCurv);        
+        StatusCalc(ref pStats.sp, spGrowCurv);  
+        StatusCalc(ref pStats.atk, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
+        StatusCalc(ref pStats.spd, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
+        StatusCalc(ref pStats.def, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
         
         pStats.lvl++;
         pStats.expToNextLvl += (pStats.expToNextLvl * 30) / 100;
     }
-    
-    private void StatusCalcSp()
-    {
-        pStats.sp += Random.Range(2, 5);
-    }
 
-    private void StatusCalc(ref float statusRef)
+    private void StatusCalc(ref float statusRef, float growCurv)
     {
-        float value = (statusRef * multiplier) / 100;
+        float value = growFactor * Mathf.Pow(pStats.lvl, growCurv);
         statusRef += Mathf.CeilToInt(value);
     }
 }
