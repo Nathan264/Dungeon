@@ -6,17 +6,18 @@ public class PlayerDef : MonoBehaviour
 {   
     [SerializeField] private Player player;
 
-    private float parryTime;
-    private bool canParry;
+    [SerializeField] private float kbForce;
+    [SerializeField] private float parryTime;
+    private bool canParry = true;
     private bool parrying = false;
     private bool blocking = false;
 
-    public bool Parrying
+    public bool IsParrying
     {
         get { return parrying; }
     }
 
-    public bool Blocking
+    public bool IsBlocking
     {
         get { return blocking; }
     }
@@ -29,20 +30,20 @@ public class PlayerDef : MonoBehaviour
             {
                 Parry();
             }
-            Block();
+            Blocking(true);
         }   
 
         if (Controls.Instance.Crtls["Block"].WasReleasedThisFrame())
         {
             canParry = true;
-            blocking = false;
+            Blocking(false);
         }
     }
 
-    private void Block()
+    private void Blocking(bool blockState)
     {
-        blocking = true;
-        player.Anim.SetTrigger("Defend");
+        blocking = blockState;
+        player.Anim.SetBool("Blocking", blockState);
     }
 
     private void Parry()
@@ -51,9 +52,9 @@ public class PlayerDef : MonoBehaviour
         StartCoroutine(ParryTimer());
     }
 
-    public void DefKnockback()
+    public void DefKnockback(Rigidbody enemyRig)
     {
-        
+        enemyRig.AddForce(player.Rig.velocity * kbForce, ForceMode.Impulse); 
     }
 
     private IEnumerator ParryTimer()
@@ -62,5 +63,4 @@ public class PlayerDef : MonoBehaviour
         yield return new WaitForSeconds(parryTime);
         parrying = false;
     }
-
 }

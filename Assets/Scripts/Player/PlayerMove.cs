@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private Player player;
     [SerializeField] private PlayerAttack pAtk;
+    [SerializeField] private PlayerDef pDef;
     private Vector2 input;
 
     [SerializeField] private float moveSpeed;
@@ -16,13 +17,12 @@ public class PlayerMove : MonoBehaviour
 
     private void Update()
     {
-        if (pAtk.IsAttacking)
-        {
-            player.Rig.velocity = Vector3.zero;
-            return;
-        }
-
         input = Controls.Instance.Crtls["Move"].ReadValue<Vector2>();
+
+        if (Controls.Instance.Crtls["Move"].WasReleasedThisFrame())
+        {
+            player.Rig.velocity = Vector3.zero;     
+        }
 
         if (Controls.Instance.Crtls["Run"].IsPressed())
         {
@@ -32,18 +32,22 @@ public class PlayerMove : MonoBehaviour
         {
             running = false;
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (pAtk.IsAttacking || pDef.IsBlocking)
+        {
+            player.Rig.velocity = Vector3.zero;     
+            return;
+        }
 
         Move();
     }
 
     private void Move()
     {
-        if (input == Vector2.zero)
-        {
-            player.Anim.SetInteger("Move", 0);
-            player.Rig.velocity = Vector3.zero;
-        }
-        else 
+        if (Controls.Instance.Crtls["Move"].IsPressed())
         {
             if (!running)
             {
@@ -55,8 +59,14 @@ public class PlayerMove : MonoBehaviour
                 player.Anim.SetInteger("Move", 2);
                 runSpeed = 1.5f;
             }
-        }
 
-        player.Rig.velocity = new Vector3(input.x, 0f, input.y) * moveSpeed * runSpeed;
+            input *= moveSpeed * runSpeed; 
+            player.Rig.velocity = new Vector3(input.x, player.Rig.velocity.y, input.y);
+        }
+        else
+        {
+            player.Anim.SetInteger("Move", 0);
+        }
     }
+    
 }

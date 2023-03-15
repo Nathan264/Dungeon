@@ -2,14 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class StatsGrowCurv
+{
+    public float min;
+    public float max;
+}
+
 public class PlayerLvl : MonoBehaviour
 {
     [SerializeField] private PlayerStats pStats;
     
     [SerializeField] private float growFactor;
-    [SerializeField] private float hpGrowCurv;
-    [SerializeField] private float spGrowCurv;
-    [SerializeField] private float[] statsGrowCurvInterval;
+    [SerializeField] private StatsGrowCurv statsGrowCurvHp;
+    [SerializeField] private StatsGrowCurv statsGrowCurvSp;
+    [SerializeField] private StatsGrowCurv statsGrowCurvSpd;
+    [SerializeField] private StatsGrowCurv statsGrowCurvAtk;
+    [SerializeField] private StatsGrowCurv statsGrowCurvDef;
+
+    // private void Start() 
+    // {
+    //     for (int i = 0; i < 100; i++)
+    //     {
+    //         LvlUp();
+    //     }
+    // }
 
     public void GainExp(int gainedExp)
     {
@@ -31,11 +48,11 @@ public class PlayerLvl : MonoBehaviour
 
     private void LvlUp()
     {
-        StatusCalc(ref pStats.hp, hpGrowCurv);        
-        StatusCalc(ref pStats.sp, spGrowCurv);  
-        StatusCalc(ref pStats.atk, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
-        StatusCalc(ref pStats.spd, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
-        StatusCalc(ref pStats.def, Random.Range(statsGrowCurvInterval[0], statsGrowCurvInterval[1]));        
+        StatusCalc(ref pStats.hp, Random.Range(statsGrowCurvHp.min, statsGrowCurvHp.max));        
+        StatusCalc(ref pStats.sp, Random.Range(statsGrowCurvSp.min, statsGrowCurvSp.max));  
+        StatusCalc(ref pStats.atk, Random.Range(statsGrowCurvAtk.min, statsGrowCurvAtk.max));        
+        StatusCalc(ref pStats.spd, Random.Range(statsGrowCurvSpd.min, statsGrowCurvSpd.max));        
+        StatusCalc(ref pStats.def, Random.Range(statsGrowCurvDef.min, statsGrowCurvDef.max));        
         
         pStats.lvl++;
         pStats.expToNextLvl += (pStats.expToNextLvl * 30) / 100;

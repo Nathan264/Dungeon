@@ -40,15 +40,18 @@ public class PlayerAttack : MonoBehaviour
 
     private void LightAttack()
     {
-        AnimateAtk(1, atkAnims[0].length / 1.5f);
-        PerformAtk(1);
+        float animDuration = atkAnims[0].length / 1.5f;
+
+        AnimateAtk(1, animDuration);
+        StartCoroutine(AttackDelay(animDuration / 2, 1f));
     }
 
     private void StrongAttack()
     {
-        AnimateAtk(2, atkAnims[1].length);
-        PerformAtk(1.5f);
+        float animDuration = atkAnims[0].length;
 
+        AnimateAtk(2, animDuration);
+        StartCoroutine(AttackDelay(animDuration / 2, 1.5f));
     }
 
     private void PerformAtk(float dmgMultiplier)
@@ -57,12 +60,11 @@ public class PlayerAttack : MonoBehaviour
 
         float dmg = pStats.atk * dmgMultiplier;
 
-        if (enemies != null)
+        if (enemies.Length > 0)
         {
             foreach (Collider enemy in enemies)
             {
-                Debug.Log("ok");
-                enemy.GetComponent<EnemyDamage>().TakeDamage(dmg);
+                enemy.GetComponent<EnemyDmg>().TakeDamage(dmg, transform.position);
             }
         }
     }
@@ -73,6 +75,13 @@ public class PlayerAttack : MonoBehaviour
         player.Anim.SetInteger("Attack", animCode);  
 
         StartCoroutine(WaitAnimataionEnds(animTime));
+    }
+
+    private IEnumerator AttackDelay(float delayTime, float dmgMultiplier)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        PerformAtk(dmgMultiplier);
     }
 
     private IEnumerator WaitAnimataionEnds(float animTime)
