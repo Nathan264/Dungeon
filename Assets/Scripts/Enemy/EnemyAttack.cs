@@ -6,58 +6,66 @@ public class EnemyAttack : MonoBehaviour
 {
     [SerializeField] private Enemy enemy;
     [SerializeField] private Vector3 atkArea;
+    [SerializeField] private Vector3 atkAreaOffset;
     [SerializeField] private LayerMask playerLayer;
 
-    private float playerDetectArea;
-    private float atkInterval;
+    [SerializeField] private float playerDetectArea;
+    [SerializeField] private float atkInterval;
+    private bool canAtk = true;
 
     private void FixedUpdate()
     {
-        DetectPlayer();
+        if (canAtk)
+        {
+            DetectPlayer();
+        }
     }
 
     private void DetectPlayer()
     {
         Collider[] player = Physics.OverlapSphere(transform.position, playerDetectArea, playerLayer);
 
-        if (player != null)
+        if (player.Length > 0)
         {
-            StartCoroutine("AtkInterval");
-        }
-        else 
-        {
-            StopCoroutine("AtkInterval");
+            StartCoroutine(AtkInterval());
+            Attack();
+            enemy.Anim.SetTrigger("Attack");
         }
     }
 
     private void Attack()
     {
-        Collider[] player = Physics.OverlapBox(transform.position, atkArea, Quaternion.identity, playerLayer);
+        Collider[] player = Physics.OverlapBox(transform.position - atkAreaOffset, atkArea, Quaternion.identity, playerLayer);
 
-        if (player != null)
+
+        if (player.Length > 0)
         {
             PlayerDef pDef = player[0].GetComponent<PlayerDef>();
-            
-            if (pDef.Parrying)
+
+            if (pDef.IsParrying)
             {
-                pDef.DefKnockback();
+                pDef.DefKnockback(enemy.Rig);
             }
             else 
             {
-                PlayerDmg pDmg = GetComponent<PlayerDmg>();
+                PlayerDmg pDmg = player[0].GetComponent<PlayerDmg>();
 
-                pDmg.TakeDamage(enemy.Atk, pDef.Blocking);
+                pDmg.TakeDamage(enemy.Atk, pDef.IsBlocking, transform.position);
             }
         }
     }
 
     private IEnumerator AtkInterval()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(atkInterval);
+        canAtk = false;
+        
+        yield return new WaitForSeconds(atkInterval);
 
-            Attack();
-        }
+        canAtk = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position - atkAreaOffset, atkArea);
     }
 }

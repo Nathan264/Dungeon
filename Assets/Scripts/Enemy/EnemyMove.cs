@@ -17,6 +17,7 @@ public class EnemyMove : MonoBehaviour
     [SerializeField] private int minDistance; 
     private int actualDestIndex;
     private bool playerDetected;
+    private bool isMoving;
 
     private void OnEnable() 
     {
@@ -57,13 +58,31 @@ public class EnemyMove : MonoBehaviour
 
     private void FreeMove()
     {
-        dir = Vector3.MoveTowards(transform.position, actualDest, moveSpd * Time.deltaTime);
-
-        enemy.Rig.MovePosition(dir);
-
-        if (Vector3.Distance(transform.position, actualDest) < 3)
+        if (destPoints.Length > 0)
         {
-            ChangeDestination();
+            enemy.Anim.SetInteger("Run", 1);
+
+            Move(actualDest);
+
+            if (Vector3.Distance(transform.position, actualDest) < 3)
+            {
+                ChangeDestination();
+            }
+
+            if (!isMoving)
+            {
+                isMoving = true;
+            }
+        }
+        else
+        {
+            enemy.Anim.SetInteger("Run", 0);
+            
+            if (isMoving)
+            {
+                enemy.Rig.velocity = Vector3.zero;
+                isMoving = false;
+            }
         }
     }
 
@@ -81,9 +100,28 @@ public class EnemyMove : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, playerPos) > minDistance)
         {
-            enemy.Rig.MovePosition(Vector3.MoveTowards(transform.position, playerPos, moveSpd * Time.deltaTime));
+            Move(playerPos);
+            isMoving = true;
+            enemy.Anim.SetInteger("Run", 1);
+        }
+        else
+        {
+            enemy.Anim.SetInteger("Run", 0);
+            
+            if (isMoving)
+            {
+                enemy.Rig.velocity = Vector3.zero;
+                isMoving = false;
+            }
         }
     }   
+
+    private void Move(Vector3 target)
+    {
+        Vector3 dir = (target - transform.position ).normalized;
+
+        enemy.Rig.velocity = dir * moveSpd;
+    }
 
     private void ChangeDestination()
     {
