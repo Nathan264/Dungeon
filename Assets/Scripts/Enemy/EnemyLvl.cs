@@ -6,50 +6,34 @@ public class EnemyLvl : MonoBehaviour
 {
     [SerializeField] private EnemyObject eObj;
     [SerializeField] private Enemy enemy;
+    [SerializeField] private StatsGrowCurv statsGrowCurvHp;
+    [SerializeField] private StatsGrowCurv statsGrowCurvSp;
+    [SerializeField] private StatsGrowCurv statsGrowCurvSpd;
+    [SerializeField] private StatsGrowCurv statsGrowCurvAtk;
+    [SerializeField] private StatsGrowCurv statsGrowCurvDef;
 
-    private int multiplier;
-
+    [SerializeField] private float growFactor;
 
     private void OnEnable() 
     {
-        SetEnemyInfo();
+        SetEnemyLvl();
     }
 
-    private void SetEnemyInfo()
+    private void SetEnemyLvl()
     {
-        enemy.EnemyName = eObj.enemyName;
-
-        Setlvlnemy();
-    }
-
-    private void Setlvlnemy()
-    {
-        if (enemy.Lvl < 20)
-        {
-            multiplier = 10;
-        }
-        else if (enemy.Lvl >= 20 && enemy.Lvl <= 60)
-        {
-            multiplier = 5;
-        }
-        else if (enemy.Lvl > 60)
-        {
-            multiplier = 3;
-        }
-
         for (int i = 0; i < enemy.Lvl; i++)
         {
-            enemy.Hp = IncreaseStats(enemy.Hp);          
-            enemy.Atk = IncreaseStats(enemy.Atk);         
-            enemy.Def = IncreaseStats(enemy.Def);         
-            enemy.Spd = IncreaseStats(enemy.Spd);         
+            enemy.Hp = StatusCalc(enemy.Hp, Random.Range(statsGrowCurvHp.min, statsGrowCurvHp.max));        
+            enemy.Atk = StatusCalc(enemy.Atk, Random.Range(statsGrowCurvAtk.min, statsGrowCurvAtk.max));        
+            enemy.Def = StatusCalc(enemy.Spd, Random.Range(statsGrowCurvSpd.min, statsGrowCurvSpd.max));        
+            enemy.Spd = StatusCalc(enemy.Def, Random.Range(statsGrowCurvDef.min, statsGrowCurvDef.max));              
         }
     }
 
-    private float IncreaseStats(float stat)
+    private float StatusCalc(float stat, float growCurv)
     {
-        float value = (stat * multiplier) / 100;
-        stat += Mathf.CeilToInt(stat);
+        float value = growFactor * Mathf.Pow(enemy.Lvl, growCurv);
+        stat += Mathf.CeilToInt(value);
 
         return stat;
     }
