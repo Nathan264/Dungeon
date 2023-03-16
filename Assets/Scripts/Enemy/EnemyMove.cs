@@ -11,7 +11,6 @@ public class EnemyMove : MonoBehaviour
     private Vector3 dir;
     private Vector3 playerPos;
 
-    [SerializeField] private float moveSpd;
     [SerializeField] private float rotateSpd;
     [SerializeField] private float playerDetectArea;
     [SerializeField] private int minDistance; 
@@ -93,7 +92,7 @@ public class EnemyMove : MonoBehaviour
         lookDir.x = 0;
         lookDir.z = 0;
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookDir, moveSpd * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookDir, enemy.MoveSpd * Time.deltaTime);
     }
 
     private void FollowPlayer()
@@ -101,8 +100,12 @@ public class EnemyMove : MonoBehaviour
         if (Vector3.Distance(transform.position, playerPos) > minDistance)
         {
             Move(playerPos);
-            isMoving = true;
             enemy.Anim.SetInteger("Run", 1);
+
+            if (!isMoving)
+            {
+                isMoving = true;
+            }
         }
         else
         {
@@ -120,7 +123,7 @@ public class EnemyMove : MonoBehaviour
     {
         Vector3 dir = (target - transform.position ).normalized;
 
-        enemy.Rig.velocity = dir * moveSpd;
+        enemy.Rig.velocity = dir * enemy.MoveSpd;
     }
 
     private void ChangeDestination()

@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class AttackArea
+{
+    public Vector3 atkArea;
+    public Vector3 atkAreaOffset;
+}
+
 public class EnemyAttack : MonoBehaviour
 {
     [SerializeField] private Enemy enemy;
-    [SerializeField] private Vector3 atkArea;
-    [SerializeField] private Vector3 atkAreaOffset;
     [SerializeField] private LayerMask playerLayer;
 
     [SerializeField] private float playerDetectArea;
@@ -35,7 +40,7 @@ public class EnemyAttack : MonoBehaviour
 
     private void Attack()
     {
-        Collider[] player = Physics.OverlapBox(transform.position - atkAreaOffset, atkArea, Quaternion.identity, playerLayer);
+        Collider[] player = Physics.OverlapBox(transform.position - enemy.AtkArea.atkAreaOffset, enemy.AtkArea.atkArea, Quaternion.identity, playerLayer);
 
 
         if (player.Length > 0)
@@ -66,6 +71,6 @@ public class EnemyAttack : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position - atkAreaOffset, atkArea);
+        Gizmos.DrawWireCube(transform.position - enemy.AtkArea.atkAreaOffset, enemy.AtkArea.atkArea);
     }
 }

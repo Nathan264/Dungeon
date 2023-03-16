@@ -4,16 +4,25 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] private EnemyObject enemyObj;
+    [SerializeField] private AttackArea atkArea;
     private Rigidbody rig;
     private Animator anim;
 
-    [SerializeField] private int lvl;
-    [SerializeField] private float hp;
-    [SerializeField] private float atk;
-    [SerializeField] private float def;
-    [SerializeField] private float spd;
-    [SerializeField] private string enemyName;
+    [SerializeField] private float moveSpd;
+    private int lvl;
+    private float hp;
+    private float atk;
+    private float def;
+    private float spd;
+    private string enemyName;
     
+
+    public AttackArea AtkArea
+    {
+        get { return atkArea; } 
+        set { atkArea = value; }
+    }
 
     public Rigidbody Rig
     {
@@ -56,6 +65,12 @@ public class Enemy : MonoBehaviour
         get { return spd; }
         set { spd = value; }
     }
+
+    public float MoveSpd
+    {
+        get { return moveSpd; }
+        set { moveSpd = value; }
+    }
     
     public string EnemyName
     {
@@ -63,9 +78,17 @@ public class Enemy : MonoBehaviour
         set { enemyName = value; }
     }
 
-    private void Awake()
+    private void OnEnable()
     {
         rig = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+
+        atkArea = enemyObj.atkArea;
+        moveSpd = enemyObj.moveSpd;
+        hp = enemyObj.hp;
+        atk = enemyObj.atk;
+        def = enemyObj.def;
+        spd = enemyObj.spd;
+        enemyName = enemyObj.enemyName;
     }
 }
