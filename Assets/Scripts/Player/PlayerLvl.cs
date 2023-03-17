@@ -12,13 +12,15 @@ public class StatsGrowCurv
 public class PlayerLvl : MonoBehaviour
 {
     [SerializeField] private PlayerStats pStats;
-    
-    [SerializeField] private float growFactor;
+    [SerializeField] private Statusbar hpBar;
+    [SerializeField] private Statusbar spBar;
     [SerializeField] private StatsGrowCurv statsGrowCurvHp;
     [SerializeField] private StatsGrowCurv statsGrowCurvSp;
     [SerializeField] private StatsGrowCurv statsGrowCurvSpd;
     [SerializeField] private StatsGrowCurv statsGrowCurvAtk;
     [SerializeField] private StatsGrowCurv statsGrowCurvDef;
+
+    [SerializeField] private float growFactor;
 
     // private void Start() 
     // {
@@ -48,11 +50,13 @@ public class PlayerLvl : MonoBehaviour
 
     private void LvlUp()
     {
-        StatusCalc(ref pStats.hp, Random.Range(statsGrowCurvHp.min, statsGrowCurvHp.max));        
-        StatusCalc(ref pStats.sp, Random.Range(statsGrowCurvSp.min, statsGrowCurvSp.max));  
+        StatusCalc(ref pStats.maxHp, Random.Range(statsGrowCurvHp.min, statsGrowCurvHp.max));        
+        StatusCalc(ref pStats.maxSp, Random.Range(statsGrowCurvSp.min, statsGrowCurvSp.max));  
         StatusCalc(ref pStats.atk, Random.Range(statsGrowCurvAtk.min, statsGrowCurvAtk.max));        
         StatusCalc(ref pStats.spd, Random.Range(statsGrowCurvSpd.min, statsGrowCurvSpd.max));        
-        StatusCalc(ref pStats.def, Random.Range(statsGrowCurvDef.min, statsGrowCurvDef.max));        
+        StatusCalc(ref pStats.def, Random.Range(statsGrowCurvDef.min, statsGrowCurvDef.max));  
+
+        LvlUpStatsRecover();
         
         pStats.lvl++;
         pStats.expToNextLvl += (pStats.expToNextLvl * 30) / 100;
@@ -62,5 +66,14 @@ public class PlayerLvl : MonoBehaviour
     {
         float value = growFactor * Mathf.Pow(pStats.lvl, growCurv);
         statusRef += Mathf.CeilToInt(value);
+    }
+
+    private void LvlUpStatsRecover()
+    {
+        pStats.hp = pStats.maxHp;
+        pStats.sp = pStats.maxSp;   
+
+        hpBar.UpdateBar(pStats.hp, pStats.maxHp);
+        hpBar.UpdateBar(pStats.sp, pStats.maxSp);
     }
 }
