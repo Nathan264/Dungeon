@@ -80,8 +80,20 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        rig = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        SetupEnemyData();
+    }
+
+    private void SetupEnemyData()
+    {
+        if (rig == null)
+        {
+            rig = GetComponent<Rigidbody>();
+        }
+
+        if (anim == null)
+        {
+            anim = GetComponent<Animator>();
+        }
 
         atkArea = enemyObj.atkArea;
         moveSpd = enemyObj.moveSpd;
