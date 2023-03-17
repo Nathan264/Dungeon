@@ -8,6 +8,8 @@ public class PlayerStats : ScriptableObject
     public int exp;
     public int expToNextLvl;
     public int lvl;
+    public float maxHp;
+    public float maxSp;
     public float hp;
     public float sp;
     public float atk;
