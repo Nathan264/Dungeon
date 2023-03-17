@@ -6,9 +6,15 @@ public class PlayerDmg : MonoBehaviour
 {
     [SerializeField] private PlayerStats pStats;
     [SerializeField] private Player player;
+    [SerializeField] private Statusbar hpBar;
 
     [SerializeField] private float kbForce;
     [SerializeField] private float defMultiplier;
+
+    private void OnEnable()
+    {
+        hpBar.UpdateBar(pStats.sp, pStats.maxSp);
+    }
 
     public void TakeDamage(float atk, bool blocked, Vector3 enemyPos)
     {
